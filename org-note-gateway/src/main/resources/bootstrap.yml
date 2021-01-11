@@ -1,0 +1,36 @@
+start:
+  nacos:
+    ip: 192.168.15.128
+    port: 8848
+    group: ${spring.application.name}
+    namespace: ${spring.profiles.active}
+server:
+  port: 8884
+  servlet:
+    context-path: /org-note-gateway
+spring:
+  application:
+    name: org-note-gateway
+  profiles:
+    active: dev
+  logging:
+    level:
+      org.springframework.cloud.gateway: TRACE
+      org.springframework.http.server.reactive: DEBUG
+      org.springframework.web.reactive: DEBUG
+      reactor.ipc.netty: DEBUG
+  cloud:
+    nacos:
+      discovery:
+        server-addr: ${start.nacos.ip}:${start.nacos.port}
+        username: nacos
+        password: nacos
+      config:
+        server-addr: ${start.nacos.ip}:${start.nacos.port}
+        namespace: ${start.nacos.namespace}
+        group: ${start.nacos.group}
+        file-extension: yml
+        extension-configs[0]:
+          data-id: getway.yml
+          group: ${start.nacos.group}
+          refresh: true

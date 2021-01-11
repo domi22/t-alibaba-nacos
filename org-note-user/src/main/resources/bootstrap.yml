@@ -1,0 +1,41 @@
+start:
+  nacos:
+    ip: 192.168.15.128
+    port: 8848
+    group: ${spring.application.name}
+    namespace: ${spring.profiles.active}
+server:
+  port: 8887
+  servlet:
+    context-path: /org-note-user
+spring:
+  application:
+    name: org-note-user
+  profiles:
+    active: dev
+  cloud:
+    nacos:
+      discovery:
+        server-addr: ${start.nacos.ip}:${start.nacos.port}
+        username: nacos
+        password: nacos
+      config:
+        server-addr: ${start.nacos.ip}:${start.nacos.port}
+        namespace: ${start.nacos.namespace}
+        group: ${start.nacos.group}
+        file-extension: yml
+        # 首先会自动读取  org-note-user-dev.yml的配置   # 默认自动刷新
+        # 自定义的扩展配置
+        extension-configs[0]:  # 自动刷新
+          data-id: jdbc.yml
+          group: ${start.nacos.group}
+          refresh: true  # 支持动态刷新
+        shared-configs[0]:  # 实时刷新的
+          data-id: kafka.yml
+          group: ${start.nacos.group}
+          refresh: true
+#-----------------------------------DAO层-mybatis-2/2[开始]-----------------------------------------------
+mybatis.:
+  config-location: classpath:mybatis-config.xml
+  mapper-locations: classpath:mapper/*.xml
+
